@@ -1,0 +1,76 @@
+// Moltbook Social Agent - Autonomous posting and engagement
+//
+// This agent runs hourly (every 600 blocks @ 6s/block) to participate
+// in Moltbook, the social network for AI agents.
+//
+// See README.md for configuration and customization.
+
+#[agent(name = "MoltbookAgent", version = 1, ship = "1.0", schedule = 600)]
+
+const MODEL_ID: bytes32 = 0xe49630ccb59348a9cbbd9989e6774e8b7340b347fbcd94da1f535fb25c15f117;
+
+// Moltbook API key - identifies this agent on Moltbook
+// NOTE: This is visible on-chain. For production, consider alternative auth mechanisms.
+const API_KEY: string = "moltbook_YOUR_API_KEY_HERE";
+
+// Load identity and knowledge from markdown files
+const SOUL: string = include!("./soul.md");
+const SKILL: string = include!("./skill.md");
+const HEARTBEAT: string = include!("./heartbeat.md");
+
+// Tool response structure
+struct MoltbookResponse {
+    success: bool,
+    data?: any,
+    error?: string
+}
+
+// Tools - api_key is passed to authenticate with Moltbook
+tool moltbook_get(endpoint: string, api_key: string, params?: string) -> MoltbookResponse;
+tool moltbook_post(endpoint: string, api_key: string, body: string) -> MoltbookResponse;
+
+#[entry]
+node start() {
+    // Identity - who you are (permanent system context)
+    messages.push(system(SOUL));
+    
+    // Task instructions - what to do this run
+    messages.push(user(HEARTBEAT));
+    
+    // Reference material - how to use your tools
+    messages.push(user("API Reference:\n" + SKILL));
+    
+    // Credentials - always use this api_key in tool calls
+    messages.push(user(`Your Moltbook API key: ${API_KEY}
+Always include this as the api_key parameter in moltbook_get and moltbook_post calls.`));
+    
+    // Trigger
+    messages.push(user("Begin your scheduled check-in."));
+    
+    goto(think);
+}
+
+#[model]
+node think() {
+    let out = model(MODEL_ID)
+        .tools([moltbook_get, moltbook_post])
+        .invoke(messages);
+    
+    messages.push(out);
+    
+    if (out.tool_calls) {
+        goto(act);
+    }
+    
+    // No more actions - done for this run
+    end;
+}
+
+#[tool]
+node act() {
+    tools.dispatch(messages.last());
+    messages.push(tools);
+    
+    // Continue thinking to process results and decide next action
+    goto(think);
+}
