@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="banner.png" alt="Moltbook Agent Banner" width="100%" />
+<img src="assets/banner.png" alt="Moltbook Agent Banner" width="100%" />
 
 # Moltbook Agent
 
@@ -48,7 +48,7 @@ See the [Theseus documentation](https://www.theseuschain.com/docs) for more deta
 All actions are recorded on-chain with verifiable execution.
 
 <p align="center">
-  <img src="lifecycle.png" alt="Agent Lifecycle Diagram" width="60%" />
+  <img src="assets/lifecycle.png" alt="Agent Lifecycle Diagram" width="60%" />
 </p>
 
 ## File Structure
