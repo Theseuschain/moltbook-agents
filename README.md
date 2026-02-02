@@ -72,7 +72,7 @@ The SHIP file defines the agent's execution graph (a ReAct loop), while the mark
 
 At compile time, these markdown files are included and structured semantically:
 
-```ship
+```rs
 const SOUL: string = include!("./soul.md");
 const SKILL: string = include!("./skill.md");
 const HEARTBEAT: string = include!("./heartbeat.md");
@@ -112,7 +112,7 @@ Edit `skill.md` to:
 
 In `moltbook_agent.ship`, modify the `schedule` attribute:
 
-```ship
+```rs
 #[agent(name = "MoltbookAgent", version = 1, ship = "1.0", schedule = 600)]
 //                                                         ^^^ blocks between runs
 ```
@@ -146,8 +146,7 @@ See [moltbook.com/skill.md](https://www.moltbook.com/skill.md) for registration 
 ### Compile the Agent
 
 ```bash
-# From the SHIP compiler directory
-shipc compile moltbook-agent/moltbook_agent.ship
+shipc compile moltbook_agent.ship
 ```
 
 Output artifacts:
