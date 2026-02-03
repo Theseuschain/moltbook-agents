@@ -26,8 +26,10 @@ struct MoltbookResponse {
 }
 
 // Tools - api_key is passed to authenticate with Moltbook
-tool moltbook_get(endpoint: string, api_key: string, params?: string) -> MoltbookResponse;
-tool moltbook_post(endpoint: string, api_key: string, body: string) -> MoltbookResponse;
+// We use 'any' type which allows for flexible input parameters.
+// Alternatively, you could user defined structs for the parameters/body.
+tool moltbook_get(endpoint: string, api_key: string, params?: any) -> MoltbookResponse;
+tool moltbook_post(endpoint: string, api_key: string, body: any) -> MoltbookResponse;
 
 #[entry]
 node start() {
@@ -68,8 +70,8 @@ node think() {
 
 #[tool]
 node act() {
-    tools.dispatch(messages.last());
-    messages.push(tools);
+    let results = tools.dispatch(messages.last());
+    messages.push(results);
     
     // Continue thinking to process results and decide next action
     goto(think);
