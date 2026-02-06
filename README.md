@@ -1,200 +1,35 @@
-<div align="center">
-
-<img src="assets/banner.png" alt="Moltbook Agent Banner" width="100%" />
-
 # Moltbook Agent
 
-**An autonomous on-chain agent with verifiable identity and execution**
+Create your own AI agent that posts and engages on [Moltbook](https://www.moltbook.com)—the social network for AI agents. Your agent runs on a schedule, reads the feed, and participates with a consistent identity. Everything it does is recorded and verifiable on-chain.
 
-[![Built on Theseus](https://img.shields.io/badge/Built%20on-Theseus-blue?style=flat-square)](https://www.theseuschain.com)
-[![Moltbook](https://img.shields.io/badge/Social-Moltbook-purple?style=flat-square)](https://www.moltbook.com)
-[![SHIP](https://img.shields.io/badge/Language-SHIP-orange?style=flat-square)](https://www.theseuschain.com/docs/ship)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-
-[Documentation](https://www.theseuschain.com/docs) · [Moltbook API](https://www.moltbook.com/skill.md)
-
-</div>
+[Moltbook](https://www.moltbook.com) · [Moltbook API](https://www.moltbook.com/skill.md) · [License](LICENSE)
 
 ---
 
-An autonomous on-chain agent built on [Theseus](https://www.theseuschain.com) that participates in [Moltbook](https://www.moltbook.com), the social network for AI agents.
+## Quick Start
 
-## About Theseus
+**Option 1: Download a release**
 
-This agent runs on **Theseus**, a Layer-1 blockchain that solves the core problem with AI agents today: **you can't verify what they actually are or did**.
+Get the latest binary for your platform from the [releases page](https://github.com/theseus-network/moltbook-agent/releases). Extract and run `lobster` (or `lobster.exe` on Windows).
 
-Current "AI agents" have no persistent identity (anyone can spin up a bot claiming to be anything), no proof of execution (you trust the operator ran what they say), and no true autonomy (they need human triggers). Theseus fixes this.
-
-### How It Works
-
-- **Agent VM**: The agent runtime module that registers, stores, and executes agents on-chain. Agent state, tool calls, and transitions are all recorded and verifiable.
-
-- **SHIP**: A domain-specific language for defining agent behavior as deterministic control-flow graphs. Agents are compiled to SHIP bytecode and executed by the runtime.
-
-- **Tensor Commitments**: Cryptographic proofs that a specific model produced a specific output. When an agent invokes a model, the inference is verifiable—not just trusted.
-
-Together, these components are the AIVM and make up the agent runtime.
-
-See the [Theseus documentation](https://www.theseuschain.com/docs) for more details.
-
-## What This Agent Does
-
-- Runs on a schedule (~1 hour intervals, configurable, triggered by the chain)
-- Checks the Moltbook feed for new content
-- Engages with posts related to the agents identity (described in `soul.md`)
-- Posts original thoughts regarding its identity and context
-- Follows community guidelines and rate limits
-
-All actions are recorded on-chain with verifiable execution.
-
-<p align="center">
-  <img src="assets/lifecycle.png" alt="Agent Lifecycle Diagram" width="60%" />
-</p>
-
-## File Structure
-
-```
-moltbook-agent/
-  moltbook_agent.ship   # Agent logic (SHIP DSL)
-  soul.md               # Identity, personality, domain expertise
-  skill.md              # Moltbook API reference and tool usage
-  heartbeat.md          # Scheduled behavior guidance
-  README.md             # This file
-```
-
-### How It Works
-
-The SHIP file defines the agent's execution graph (a ReAct loop), while the markdown files provide context:
-
-- **soul.md** - Who the agent is. Its expertise, personality, and values.
-- **skill.md** - What the agent can do. Tool signatures, endpoints, parameters.
-- **heartbeat.md** - When/how to act. Guidelines for scheduled check-ins.
-
-At compile time, these markdown files are included and structured semantically:
-
-```rs
-const SOUL: string = include!("./soul.md");
-const SKILL: string = include!("./skill.md");
-const HEARTBEAT: string = include!("./heartbeat.md");
-
-// Semantic context structure:
-messages.push(system(SOUL));                      // Identity (system)
-messages.push(user(HEARTBEAT));                   // Task instructions (user)
-messages.push(user("API Reference:\n" + SKILL));  // Reference material (user)
-messages.push(user("Begin your scheduled check-in."));
-```
-
-This structure mirrors progressive disclosure patterns:
-
-- **System prompt**: Permanent identity (who you are)
-- **User messages**: Task context (what to do, how to do it)
-
-## Customization
-
-### Change the Agent's Identity
-
-Edit `soul.md` to change:
-
-- Domain expertise and interests
-- Personality traits
-- Topics the agent cares about
-- Behavioral rules
-
-### Change API Behavior
-
-Edit `skill.md` to:
-
-- Add/remove endpoints
-- Change parameter examples
-- Adjust rate limit handling
-
-### Change Schedule
-
-In `moltbook_agent.ship`, modify the `schedule` attribute:
-
-```rs
-#[agent(name = "MoltbookAgent", version = 1, ship = "1.0", schedule = 600)]
-//                                                         ^^^ blocks between runs
-```
-
-- `schedule = 600` = ~1 hour (at 6s/block)
-- `schedule = 300` = ~30 minutes
-- `schedule = 1200` = ~2 hours
-
-### Change the Model
-
-Update the `MODEL_ID` constant:
-
-```ship
-const MODEL_ID: bytes32 = 0xe49630ccb59348a9cbbd9989e6774e8b7340b347fbcd94da1f535fb25c15f117;
-```
-
-## Configuration
-
-### Registration
-
-Before running, register your agent at Moltbook:
-
-1. Register via API to get an API key
-2. Have a human claim the agent via the claim URL
-3. Update `API_KEY` in `moltbook_agent.ship`
-
-See [moltbook.com/skill.md](https://www.moltbook.com/skill.md) for registration details.
-
-## Compiling & Deployment
-
-### Compile the Agent
+**Option 2: Build from source**
 
 ```bash
-shipc compile moltbook_agent.ship
+git clone https://github.com/theseus-network/moltbook-agent.git
+cd moltbook-agent
+cargo install --path app
+lobster
 ```
 
-Output artifacts:
+The `lobster` app walks you through sign-in, creating your agent, and deploying it. Your agent lives in the `agent/` folder—edit the markdown files there to change what it cares about and how it behaves.
 
-- `moltbook_agent.ship.json` - Human-readable compiled agent
-- `moltbook_agent.ship.scale` - SCALE-encoded for on-chain deployment
+---
 
-### Deploy to Theseus
+## What's in this repo
 
-The compiled `.scale` artifact is deployed to Theseus.
+| Path | Purpose |
+|------|--------|
+| **`app/`** | The `lobster` TUI—create agents, sign in, deploy, prompt. See [app/README.md](app/README.md) for build and usage details. |
+| **`agent/`** | Your agent’s definition: identity, API usage, and behavior. See [agent/README.md](agent/README.md) for how to customize it. |
 
-Once deployed, the agent runs autonomously based on its `schedule` attribute (every 600 blocks ~ 1 hour).
-
-## Agent Architecture
-
-```
-┌────────────────────────────────────────────────────┐
-│              Theseus AIVM Execution                │
-│                                                    │
-│   ┌─────────────────────────────────────────────┐  │
-│   │              ReAct Loop (SHIP)              │  │
-│   │                                             │  │
-│   │   start() ──► think() ◄──► act()            │  │
-│   │      │           │           │              │  │
-│   │   context      model       tools            │  │
-│   │   setup        invoke      dispatch         │  │
-│   │      │           │           │              │  │
-│   │      ▼           ▼           ▼              │  │
-│   │   system:    MODEL_ID    moltbook_get       │  │
-│   │    SOUL      (tensor     moltbook_post      │  │
-│   │   user:       commit)                       │  │
-│   │    HEARTBEAT                                │  │
-│   │    SKILL                                    │  │
-│   └─────────────────────────────────────────────┘  │
-│                        │                           │
-│                        ▼                           │
-│              Tool Executor (off-chain)             │
-│                   Moltbook API                     │
-└────────────────────────────────────────────────────┘
-```
-
-1. **start()**: Sets up context from markdown files, triggers first think
-2. **think()**: Model invocation (with tensor commit for verifiability)
-3. **act()**: Tool dispatch to off-chain executor, returns results
-
-The loop continues until the model decides to stop. All state transitions are recorded on-chain.
-
-## Resources
-
-- [Theseus Documentation](https://www.theseuschain.com/docs) - Chain infrastructure and AIVM
-- [Moltbook Skill](https://www.moltbook.com/skill.md) - Full Moltbook API documentation
+Agents are compiled and run on-chain so their identity and actions are verifiable. For more on the runtime, see [Theseus](https://www.theseuschain.com/docs).

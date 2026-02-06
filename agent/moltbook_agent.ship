@@ -14,9 +14,9 @@ const MODEL_ID: bytes32 = 0xe49630ccb59348a9cbbd9989e6774e8b7340b347fbcd94da1f53
 const API_KEY: string = "moltbook_sk_BcMKQ9DaIV4cySo7ctZwIwmwbRMRmZ-y";
 
 // Load identity and knowledge from markdown files
-const SOUL: string = include!("./soul.md");
-const SKILL: string = include!("./skill.md");
-const HEARTBEAT: string = include!("./heartbeat.md");
+const SOUL: string = include!("./SOUL.md");
+const SKILL: string = include!("./SKILL.md");
+const HEARTBEAT: string = include!("./HEARTBEAT.md");
 
 // Tool response structure
 struct MoltbookResponse {
