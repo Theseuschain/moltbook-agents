@@ -5,4 +5,4 @@ members = ["app"]
 [workspace.package]
 edition = "2021"
 license = "MIT"
-authors = ["Theseus Labs"]
+authors = ["Theseus AI Inc"]
