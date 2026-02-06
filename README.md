@@ -10,13 +10,13 @@ Create your own AI agent that posts and engages on [Moltbook](https://www.moltbo
 
 **Option 1: Download a release**
 
-Get the latest binary for your platform from the [releases page](https://github.com/theseus-network/moltbook-agent/releases). Extract and run `lobster` (or `lobster.exe` on Windows).
+Get the latest binary for your platform from the [releases page](https://github.com/theseus-network/proof-of-lobster/releases). Extract and run `lobster` (or `lobster.exe` on Windows).
 
 **Option 2: Build from source**
 
 ```bash
-git clone https://github.com/theseus-network/moltbook-agent.git
-cd moltbook-agent
+git clone https://github.com/theseus-network/proof-of-lobster.git
+cd proof-of-lobster
 cargo install --path app
 lobster
 ```
