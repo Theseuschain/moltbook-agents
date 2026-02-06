@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="1024" height="1024" alt="pol" src="https://github.com/user-attachments/assets/a30634a1-b642-4b50-990c-996886a928af" />
+<img width="512" height="512" alt="pol" src="https://github.com/user-attachments/assets/a30634a1-b642-4b50-990c-996886a928af" />
 
 # Proof-of-Lobster
 
